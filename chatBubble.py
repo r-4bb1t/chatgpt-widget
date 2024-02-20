@@ -12,7 +12,11 @@ class ChatBubble(QtWidgets.QWidget):
         self.label.setMaximumWidth(max_width)
 
         self.label.setStyleSheet(
-            "QLabel { background-color: white; color: black; %s; padding: 5px; }"
+            """QLabel { background-color: qradialgradient(cx:0, cy:0, radius: 1, fx:0, fy:0, stop:0 rgba(0, 0, 0, 60), stop:1 rgba(0, 0, 0, 30));
+                border: 1px solid rgba(255, 255, 255, 0.6);
+                color: white; %s;
+                padding-top: 12px; padding-bottom: 12px; padding-left: 8px; padding-right: 8px;
+                }"""
             % (
                 """border-top-left-radius: 10px;
                 border-top-right-radius: 10px;
@@ -32,16 +36,11 @@ class ChatBubble(QtWidgets.QWidget):
             self.layout.addWidget(self.label, alignment=QtCore.Qt.AlignLeft)
 
         self.setLayout(self.layout)
-        self.layout.setContentsMargins(8, 10, 8, 10)
+        self.layout.setContentsMargins(8, 8, 8, 8)
         self.label.setWordWrap(True)
         self.setFixedHeight(
             max(self.label.sizeHint().height(), self.label.heightForWidth(max_width))
-            + 20
+            + 16
         )
-        print(
-            self.label.heightForWidth(max_width),
-            self.label.height(),
-            self.label.sizeHint().height(),
-            self.height(),
-        )
+        print(text)
         self.updateGeometry()

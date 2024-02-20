@@ -121,8 +121,9 @@ class ChatWidget(QtWidgets.QWidget):
         self.animation.setStartValue(start_geometry)
         self.animation.setEndValue(end_geometry)
         self.animation.start()
+        self.animation.finished.connect(self.scrollChatLogBottom)
 
-        self.smooth_scroll_chat_logs_to_bottom()
+        self.scrollChatLogBottom()
 
     def add_logs(self, layout: QtWidgets.QVBoxLayout):
         self.chat_log = QtWidgets.QListWidget()
@@ -138,6 +139,11 @@ class ChatWidget(QtWidgets.QWidget):
             QListWidget {
                 border: none;
                 background: rgba(0,0,0,0);
+            }
+            QListWidget::item:hover,
+            QListWidget::item:disabled:hover,
+            QListWidget::item:hover:!active {
+                background: transparent;
             }
             QScrollBar:vertical {
                 border: none;
@@ -220,7 +226,7 @@ class ChatWidget(QtWidgets.QWidget):
         self.chat_input.clear()
         if user_input:
             self.addChatBubble(user_input, True)
-            self.smooth_scroll_chat_logs_to_bottom()
+            self.scrollChatLogBottom()
 
             self.addChatBubble("...", False)
 
@@ -229,7 +235,7 @@ class ChatWidget(QtWidgets.QWidget):
             self.chat_log.takeItem(self.chat_log.count() - 1)
 
             self.addChatBubble(response, False)
-            self.smooth_scroll_chat_logs_to_bottom()
+            self.scrollChatLogBottom()
 
     def addChatBubble(self, text, is_user):
         bubble = ChatBubble(text, is_user, max_width=self.chat_log.width() - 20 - 16)
@@ -257,7 +263,7 @@ class ChatWidget(QtWidgets.QWidget):
             screen_height - window_size.height() - 100,
         )
 
-    def smooth_scroll_chat_logs_to_bottom(self):
+    def scrollChatLogBottom(self):
         self.chat_log.scrollToBottom()
 
     def closeEvent(self, event):
