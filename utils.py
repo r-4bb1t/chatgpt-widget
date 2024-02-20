@@ -28,6 +28,6 @@ async def getGPTResponse(message):
     return response.choices[0].message.content
 
 
-def resetHistoy():
+def resetHistory():
     global history
     history = []

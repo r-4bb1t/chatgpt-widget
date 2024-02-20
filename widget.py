@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from chatBubble import ChatBubble
 import asyncio
 from PyQt5.QtCore import QPropertyAnimation, QRect
-from utils import getGPTResponse
+from utils import getGPTResponse, resetHistory
 
 
 class ChatWidget(QtWidgets.QWidget):
@@ -62,15 +62,18 @@ class ChatWidget(QtWidgets.QWidget):
         self.topBar = QtWidgets.QWidget(parent)
         topBarLayout = QtWidgets.QHBoxLayout()
         self.topBar.setLayout(topBarLayout)
-        self.topBar.setGeometry(0, 0, 400, 36)
+        self.topBar.setGeometry(0, 0, 400, 48)
         self.topBar.setStyleSheet(
             """
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 60), stop:1 rgba(255, 255, 255, 0));
             border: none;
+            padding: 0;
             """
         )
-
+        self.topBar.setContentsMargins(0, 0, 0, 0)
+        self.addResetButton(topBarLayout)
         self.addSizeButton(topBarLayout)
+        self.addCloseButton(topBarLayout)
         self.topBar.mousePressEvent = self.mousePressEvent
         self.topBar.mouseMoveEvent = self.mouseMoveEvent
         self.topBar.raise_()
@@ -85,18 +88,73 @@ class ChatWidget(QtWidgets.QWidget):
 
     def addSizeButton(self, layout: QtWidgets.QHBoxLayout):
         self.sizeButton = QtWidgets.QPushButton()
-        self.sizeButton.setFixedSize(40, 24)
+        self.sizeButton.setFixedSize(32, 32)
         self.sizeButton.setIcon(QtGui.QIcon("icons/chevron-up.png"))
         self.sizeButton.setIconSize(QtCore.QSize(24, 24))
         self.sizeButton.setStyleSheet(
             """
-            background: none;
-            border: none;
+            QPushButton {
+                background: none;
+                border: none;
+                border-radius: 16px;
+            }
+            QPushButton:hover {
+                background: rgba(255, 255, 255, 30);
+                border: none;
+            }
             """
         )
         self.sizeButton.clicked.connect(self.toggleSize)
         self.sizeButton.raise_()
         layout.addWidget(self.sizeButton)
+
+    def addCloseButton(self, layout: QtWidgets.QHBoxLayout):
+        self.closeButton = QtWidgets.QPushButton()
+        self.closeButton.setFixedSize(32, 32)
+        self.closeButton.setIcon(QtGui.QIcon("icons/close.png"))
+        self.closeButton.setIconSize(QtCore.QSize(24, 24))
+        self.closeButton.setStyleSheet(
+            """
+            QPushButton {
+                background: none;
+                border: none;
+                border-radius: 16px;
+            }
+            QPushButton:hover {
+                background: rgba(255, 255, 255, 30);
+                border: none;
+            }
+            """
+        )
+        self.closeButton.clicked.connect(self.close)
+        self.closeButton.raise_()
+        layout.addWidget(self.closeButton)
+
+    def addResetButton(self, layout: QtWidgets.QHBoxLayout):
+        self.resetButton = QtWidgets.QPushButton()
+        self.resetButton.setFixedSize(32, 32)
+        self.resetButton.setIcon(QtGui.QIcon("icons/reset.png"))
+        self.resetButton.setIconSize(QtCore.QSize(24, 24))
+        self.resetButton.setStyleSheet(
+            """
+            QPushButton {
+                background: none;
+                border: none;
+                border-radius: 16px;
+            }
+            QPushButton:hover {
+                background: rgba(255, 255, 255, 30);
+                border: none;
+            }
+            """
+        )
+        self.resetButton.clicked.connect(self.reset)
+        self.resetButton.raise_()
+        layout.addWidget(self.resetButton)
+
+    def reset(self):
+        resetHistory()
+        self.chatLog.clear()
 
     def toggleSize(self):
         startGeometry = self.geometry()
@@ -136,6 +194,7 @@ class ChatWidget(QtWidgets.QWidget):
             QListWidget {
                 border: none;
                 background: rgba(0,0,0,0);
+                padding-top: 20px;
             }
             QListWidget::item:hover,
             QListWidget::item:disabled:hover,
