@@ -1,4 +1,6 @@
-![image](https://github.com/r-4bb1t/chatgpt-widget/assets/52532871/ec31c0e9-bcff-44aa-ae32-394ad2feba08)
+| Img | Gif |
+| --- | --- |
+| ![image](https://github.com/r-4bb1t/chatgpt-widget/assets/52532871/ec31c0e9-bcff-44aa-ae32-394ad2feba08) | ![GIF 2024-02-21 오전 8-20-04](https://github.com/r-4bb1t/chatgpt-widget/assets/52532871/c242e879-37e6-4a1f-900a-d219d41d8c69) |
 
 
 # ChatGPT Widget
