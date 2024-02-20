@@ -232,12 +232,12 @@ class ChatWidget(QtWidgets.QWidget):
             self.smooth_scroll_chat_logs_to_bottom()
 
     def addChatBubble(self, text, is_user):
-        bubble = ChatBubble(text, is_user, max_width=self.chat_log.width() - 20)
+        bubble = ChatBubble(text, is_user, max_width=self.chat_log.width() - 20 - 16)
         item = QtWidgets.QListWidgetItem(self.chat_log)
         item.setSizeHint(
             QtCore.QSize(
                 self.chat_log.width() - 20,
-                bubble.label.heightForWidth(self.chat_log.width() - 20) + 16,
+                bubble.height(),
             )
         )
         item.setFlags(item.flags() & ~QtCore.Qt.ItemIsSelectable)
