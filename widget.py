@@ -242,12 +242,24 @@ class ChatWidget(QtWidgets.QWidget):
             """
         )
 
-        self.chatInput = QtWidgets.QLineEdit()
-        self.chatInput.returnPressed.connect(
-            lambda: asyncio.create_task(self.sendChat())
-        )
+        self.chatInput = QtWidgets.QTextEdit()
+
+        def keyPressEvent(event):
+            if event.key() == QtCore.Qt.Key_Return:
+                if event.modifiers() & QtCore.Qt.ShiftModifier:
+                    self.chatInput.insertPlainText("\n")
+                else:
+                    asyncio.create_task(self.sendChat())
+            else:
+                QtWidgets.QTextEdit.keyPressEvent(self.chatInput, event)
+            lineCount = self.chatInput.document().lineCount()
+            self.chatInput.setFixedHeight(20 + 20 * min(lineCount, 4))
+
+        self.chatInput.keyPressEvent = keyPressEvent
+        self.chatInput.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.chatInput.setFixedHeight(40)
         self.chatInput.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum
         )
 
         self.chatInput.setStyleSheet(
@@ -278,7 +290,7 @@ class ChatWidget(QtWidgets.QWidget):
         layout.addWidget(self.inputContainer)
 
     async def sendChat(self):
-        userInput = self.chatInput.text()
+        userInput = self.chatInput.toPlainText().strip()
         self.chatInput.clear()
         if userInput:
             self.addChatBubble(userInput, True)
