@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from chatBubble import ChatBubble
 import asyncio
 from PyQt5.QtCore import QPropertyAnimation, QRect
-from utils import get_gpt_response
+from utils import getGPTResponse
 
 
 class ChatWidget(QtWidgets.QWidget):
@@ -10,131 +10,128 @@ class ChatWidget(QtWidgets.QWidget):
         super().__init__()
 
         self.setGeometry(0, 0, 400, 200)
-        self.is_expanded = False
-        self.original_height = 200
+        self.isExpanded = False
+        self.originalHeight = 200
 
         self.setWindowFlags(
             QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint
         )
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
-        self.set_main_widget()
-        self.make_chat_widget()
+        self.makeMainWidget()
+        self.makeChatWidget()
 
-        self.add_logs(self.chats_layout)
-        self.add_input(self.chats_layout)
+        self.addChatlog(self.chatsLayout)
+        self.addInput(self.chatsLayout)
 
         layout = QtWidgets.QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
-        self.main_layout.addWidget(self.chats)
-        layout.addWidget(self.main_widget)
-        self.add_topbar(self.main_widget)
+        self.mainLayout.addWidget(self.chats)
+        layout.addWidget(self.mainWidget)
+        self.addTopbar(self.mainWidget)
 
-        self.show_on_bottom_right()
-        self.show()
+        self.showOnBottomRight()
 
-    def set_main_widget(self):
-        self.main_widget = QtWidgets.QWidget()
-        self.main_layout = QtWidgets.QVBoxLayout()
-        self.main_widget.setLayout(self.main_layout)
-        self.main_widget.setSizePolicy(
+    def makeMainWidget(self):
+        self.mainWidget = QtWidgets.QWidget()
+        self.mainLayout = QtWidgets.QVBoxLayout()
+        self.mainWidget.setLayout(self.mainLayout)
+        self.mainWidget.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
         )
-        self.main_widget.setStyleSheet(
+        self.mainWidget.setStyleSheet(
             """background: qradialgradient(cx:0, cy:0, radius: 1, fx:0, fy:0, stop:0 rgba(50, 50, 50, 90), stop:1 rgba(50, 50, 50, 60));
             border: 1px solid rgba(255,255,255, 50);
             border-radius: 10px;
             padding: 0;
             """
         )
-        self.main_layout.setContentsMargins(0, 0, 0, 0)
-        self.main_layout.setSpacing(0)
+        self.mainLayout.setContentsMargins(0, 0, 0, 0)
+        self.mainLayout.setSpacing(0)
 
-    def make_chat_widget(self):
+    def makeChatWidget(self):
         self.chats = QtWidgets.QWidget()
-        self.chats_layout = QtWidgets.QVBoxLayout()
+        self.chatsLayout = QtWidgets.QVBoxLayout()
         self.chats.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
         )
-        self.chats.setLayout(self.chats_layout)
+        self.chats.setLayout(self.chatsLayout)
 
-    def add_topbar(self, parent):
-        self.topbar = QtWidgets.QWidget(parent)
-        topbar_layout = QtWidgets.QHBoxLayout()
-        self.topbar.setLayout(topbar_layout)
-        self.topbar.setGeometry(0, 0, 400, 36)
-        self.topbar.setStyleSheet(
+    def addTopbar(self, parent):
+        self.topBar = QtWidgets.QWidget(parent)
+        topBarLayout = QtWidgets.QHBoxLayout()
+        self.topBar.setLayout(topBarLayout)
+        self.topBar.setGeometry(0, 0, 400, 36)
+        self.topBar.setStyleSheet(
             """
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 60), stop:1 rgba(255, 255, 255, 0));
             border: none;
             """
         )
 
-        self.add_size_button(topbar_layout)
-        self.topbar.mousePressEvent = self.mousePressEvent
-        self.topbar.mouseMoveEvent = self.mouseMoveEvent
-        self.topbar.raise_()
+        self.addSizeButton(topBarLayout)
+        self.topBar.mousePressEvent = self.mousePressEvent
+        self.topBar.mouseMoveEvent = self.mouseMoveEvent
+        self.topBar.raise_()
 
     def mousePressEvent(self, event):
-        self.old_pos = event.globalPos()
+        self.oldPos = event.globalPos()
 
     def mouseMoveEvent(self, event):
-        delta = QtCore.QPoint(event.globalPos() - self.old_pos)
+        delta = QtCore.QPoint(event.globalPos() - self.oldPos)
         self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.old_pos = event.globalPos()
+        self.oldPos = event.globalPos()
 
-    def add_size_button(self, layout: QtWidgets.QHBoxLayout):
-        self.size_button = QtWidgets.QPushButton()
-        self.size_button.setFixedSize(40, 24)
-        self.size_button.setIcon(QtGui.QIcon("icons/chevron-up.png"))
-        self.size_button.setIconSize(QtCore.QSize(24, 24))
-        self.size_button.setStyleSheet(
+    def addSizeButton(self, layout: QtWidgets.QHBoxLayout):
+        self.sizeButton = QtWidgets.QPushButton()
+        self.sizeButton.setFixedSize(40, 24)
+        self.sizeButton.setIcon(QtGui.QIcon("icons/chevron-up.png"))
+        self.sizeButton.setIconSize(QtCore.QSize(24, 24))
+        self.sizeButton.setStyleSheet(
             """
             background: none;
             border: none;
             """
         )
-        self.size_button.clicked.connect(self.toggle_size)
-        self.size_button.raise_()
-        layout.addWidget(self.size_button)
+        self.sizeButton.clicked.connect(self.toggleSize)
+        self.sizeButton.raise_()
+        layout.addWidget(self.sizeButton)
 
-    def toggle_size(self):
-        start_geometry = self.geometry()
+    def toggleSize(self):
+        startGeometry = self.geometry()
 
-        if self.is_expanded:
-            self.size_button.setIcon(QtGui.QIcon("icons/chevron-up.png"))
-            self.is_expanded = False
-            end_height = self.original_height
+        if self.isExpanded:
+            self.sizeButton.setIcon(QtGui.QIcon("icons/chevron-up.png"))
+            self.isExpanded = False
+            endHeight = self.originalHeight
         else:
-            self.size_button.setIcon(QtGui.QIcon("icons/chevron-down.png"))
-            self.is_expanded = True
-            end_height = 600
+            self.sizeButton.setIcon(QtGui.QIcon("icons/chevron-down.png"))
+            self.isExpanded = True
+            endHeight = 600
 
-        end_y = start_geometry.y() + start_geometry.height() - end_height
-        end_geometry = QRect(
-            start_geometry.x(), end_y, start_geometry.width(), end_height
-        )
+        endY = startGeometry.y() + startGeometry.height() - endHeight
+        endGeometry = QRect(startGeometry.x(), endY, startGeometry.width(), endHeight)
 
         self.animation = QPropertyAnimation(self, b"geometry")
         self.animation.setDuration(100)
-        self.animation.setStartValue(start_geometry)
-        self.animation.setEndValue(end_geometry)
+        self.animation.setStartValue(startGeometry)
+        self.animation.setEndValue(endGeometry)
         self.animation.start()
         self.animation.finished.connect(self.scrollChatLogBottom)
 
         self.scrollChatLogBottom()
 
-    def add_logs(self, layout: QtWidgets.QVBoxLayout):
-        self.chat_log = QtWidgets.QListWidget()
-        self.chat_log.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.chat_log.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
-        self.chat_log.setSizePolicy(
+    def addChatlog(self, layout: QtWidgets.QVBoxLayout):
+        self.chatLog = QtWidgets.QListWidget()
+        self.chatLog.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.chatLog.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.chatLog.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
         )
-        self.chat_log.setContentsMargins(10, 20, 10, 10)
+        self.chatLog.setContentsMargins(10, 20, 10, 10)
 
-        self.chat_log.setStyleSheet(
+        self.chatLog.setStyleSheet(
             """
             QListWidget {
                 border: none;
@@ -171,13 +168,13 @@ class ChatWidget(QtWidgets.QWidget):
             }
             """
         )
-        layout.addWidget(self.chat_log)
+        layout.addWidget(self.chatLog)
 
-    def add_input(self, layout: QtWidgets.QVBoxLayout):
-        self.input_container = QtWidgets.QWidget()
-        self.input_container_layout = QtWidgets.QHBoxLayout()
-        self.input_container.setLayout(self.input_container_layout)
-        self.input_container.setStyleSheet(
+    def addInput(self, layout: QtWidgets.QVBoxLayout):
+        self.inputContainer = QtWidgets.QWidget()
+        self.inputContainerLayout = QtWidgets.QHBoxLayout()
+        self.inputContainer.setLayout(self.inputContainerLayout)
+        self.inputContainer.setStyleSheet(
             """
             background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 255, 255, 30), stop:1 rgba(255, 255, 255, 15));
             border: 1px solid rgba(255, 255, 255, 50);
@@ -186,15 +183,15 @@ class ChatWidget(QtWidgets.QWidget):
             """
         )
 
-        self.chat_input = QtWidgets.QLineEdit()
-        self.chat_input.returnPressed.connect(
-            lambda: asyncio.create_task(self.send_chat())
+        self.chatInput = QtWidgets.QLineEdit()
+        self.chatInput.returnPressed.connect(
+            lambda: asyncio.create_task(self.sendChat())
         )
-        self.chat_input.setSizePolicy(
+        self.chatInput.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
         )
 
-        self.chat_input.setStyleSheet(
+        self.chatInput.setStyleSheet(
             """
             background: rgba(255, 255, 255, 0);
             border: none;
@@ -202,69 +199,70 @@ class ChatWidget(QtWidgets.QWidget):
             """
         )
 
-        send_button = QtWidgets.QPushButton()
-        send_button.setFixedSize(40, 24)
-        send_button.setIcon(QtGui.QIcon("icons/send.png"))
-        send_button.setIconSize(QtCore.QSize(24, 24))
-        send_button.clicked.connect(lambda: asyncio.create_task(self.send_chat()))
-        send_button.setStyleSheet(
+        sendButton = QtWidgets.QPushButton()
+        sendButton.setFixedSize(40, 24)
+        sendButton.setIcon(QtGui.QIcon("icons/send.png"))
+        sendButton.setIconSize(QtCore.QSize(24, 24))
+        sendButton.clicked.connect(lambda: asyncio.create_task(self.sendChat()))
+        sendButton.setStyleSheet(
             """
             background: rgba(255, 255, 255, 0);
             border: none;
             """
         )
-        send_button.setSizePolicy(
+        sendButton.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
         )
 
-        self.input_container_layout.addWidget(self.chat_input)
-        self.input_container_layout.addWidget(send_button)
-        layout.addWidget(self.input_container)
+        self.inputContainerLayout.addWidget(self.chatInput)
+        self.inputContainerLayout.addWidget(sendButton)
+        layout.addWidget(self.inputContainer)
 
-    async def send_chat(self):
-        user_input = self.chat_input.text()
-        self.chat_input.clear()
-        if user_input:
-            self.addChatBubble(user_input, True)
+    async def sendChat(self):
+        userInput = self.chatInput.text()
+        self.chatInput.clear()
+        if userInput:
+            self.addChatBubble(userInput, True)
             self.scrollChatLogBottom()
 
             self.addChatBubble("...", False)
 
-            response = await get_gpt_response(user_input)
+            response = await getGPTResponse(userInput)
 
-            self.chat_log.takeItem(self.chat_log.count() - 1)
+            self.chatLog.takeItem(self.chatLog.count() - 1)
 
             self.addChatBubble(response, False)
             self.scrollChatLogBottom()
 
-    def addChatBubble(self, text, is_user):
-        bubble = ChatBubble(text, is_user, max_width=self.chat_log.width() - 20 - 16)
-        item = QtWidgets.QListWidgetItem(self.chat_log)
+    def addChatBubble(self, text, isUser):
+        bubble = ChatBubble(text, isUser, maxWidth=self.chatLog.width() - 20 - 16)
+        item = QtWidgets.QListWidgetItem(self.chatLog)
         item.setSizeHint(
             QtCore.QSize(
-                self.chat_log.width() - 20,
+                self.chatLog.width() - 20,
                 bubble.height(),
             )
         )
         item.setFlags(item.flags() & ~QtCore.Qt.ItemIsSelectable)
-        self.chat_log.addItem(item)
-        self.chat_log.setItemWidget(item, bubble)
-        self.topbar.raise_()
+        self.chatLog.addItem(item)
+        self.chatLog.setItemWidget(item, bubble)
+        self.topBar.raise_()
         return item
 
-    def show_on_bottom_right(self):
-        screen_geometry = QtWidgets.QApplication.desktop().screenGeometry()
-        screen_width = screen_geometry.width()
-        screen_height = screen_geometry.height()
-        window_size = self.geometry()
+    def showOnBottomRight(self):
+        screenGeometry = QtWidgets.QApplication.desktop().screenGeometry()
+        screenWidth = screenGeometry.width()
+        screenHeight = screenGeometry.height()
+        windowSize = self.geometry()
 
         self.move(
-            screen_width - window_size.width() - 100,
-            screen_height - window_size.height() - 100,
+            screenWidth - windowSize.width() - 100,
+            screenHeight - windowSize.height() - 100,
         )
+        self.show()
 
     def scrollChatLogBottom(self):
-        self.chat_log.scrollToBottom()
+        self.chatLog.scrollToBottom()
 
     def closeEvent(self, event):
         asyncio.get_event_loop().stop()

@@ -10,7 +10,8 @@ api_key = os.getenv("OPENAI_API_KEY")
 history = []
 
 
-async def get_gpt_response(message):
+async def getGPTResponse(message):
+    global history
     history.append({"role": "user", "content": message})
     client.api_key = api_key
     response = await client.chat.completions.create(
@@ -25,3 +26,8 @@ async def get_gpt_response(message):
         {"role": "assistant", "content": response.choices[0].message.content}
     )
     return response.choices[0].message.content
+
+
+def resetHistoy():
+    global history
+    history = []

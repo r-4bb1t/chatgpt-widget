@@ -3,13 +3,13 @@ from PyQt5.QtCore import Qt
 
 
 class ChatBubble(QtWidgets.QWidget):
-    def __init__(self, text, is_user=True, max_width=380):
+    def __init__(self, text, is_user=True, maxWidth=380):
         super().__init__()
         self.layout = QtWidgets.QHBoxLayout()
 
         self.label = QtWidgets.QLabel(text)
         self.label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        self.label.setMaximumWidth(max_width)
+        self.label.setMaximumWidth(maxWidth)
 
         self.label.setStyleSheet(
             """QLabel { background-color: qradialgradient(cx:0, cy:0, radius: 1, fx:0, fy:0, stop:0 rgba(0, 0, 0, 60), stop:1 rgba(0, 0, 0, 30));
@@ -39,7 +39,7 @@ class ChatBubble(QtWidgets.QWidget):
         self.layout.setContentsMargins(8, 8, 8, 8)
         self.label.setWordWrap(True)
         self.setFixedHeight(
-            max(self.label.sizeHint().height(), self.label.heightForWidth(max_width))
+            max(self.label.sizeHint().height(), self.label.heightForWidth(maxWidth))
             + 16
         )
         print(text)
