@@ -282,9 +282,9 @@ class ChatWidget(QtWidgets.QWidget):
         self.chatInput.clear()
         if userInput:
             self.addChatBubble(userInput, True)
-            self.scrollChatLogBottom()
 
             self.addChatBubble("...", False)
+            self.scrollChatLogBottom()
 
             response = await getGPTResponse(userInput)
 
