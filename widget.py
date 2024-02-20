@@ -253,8 +253,8 @@ class ChatWidget(QtWidgets.QWidget):
         window_size = self.geometry()
 
         self.move(
-            screen_width - window_size.width() - 60,
-            screen_height - window_size.height() - 60,
+            screen_width - window_size.width() - 100,
+            screen_height - window_size.height() - 100,
         )
 
     def smooth_scroll_chat_logs_to_bottom(self):
