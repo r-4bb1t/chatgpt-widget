@@ -1,8 +1,10 @@
 import sys
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtGui import QFontDatabase, QFont
 
 from widget import ChatWidget
+from utils import getPath
+
 from BlurWindow.blurWindow import blur
 
 import asyncio
@@ -17,6 +19,9 @@ if __name__ == "__main__":
 
     chat_widget = ChatWidget()
     blur(chat_widget.winId())
+
+    app.setWindowIcon(QtGui.QIcon(getPath("icon.ico")))
+    chat_widget.setWindowIcon(QtGui.QIcon(getPath("icon.ico")))
 
     loop = qasync.QEventLoop(app)
     asyncio.set_event_loop(loop)

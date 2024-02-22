@@ -1,11 +1,24 @@
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
 import os
+import sys
 
 load_dotenv()
 
+
+def getPath(filename):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, filename)
+    else:
+        return filename
+
+
 client = AsyncOpenAI()
+
 api_key = os.getenv("OPENAI_API_KEY")
+if api_key is None:
+    with open("api-key.txt") as f:
+        api_key = f.read().strip()
 
 history = []
 

@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from chatBubble import ChatBubble
 import asyncio
 from PyQt5.QtCore import QPropertyAnimation, QRect
-from utils import getGPTResponse, resetHistory
+from utils import getGPTResponse, resetHistory, getPath
 
 
 class ChatWidget(QtWidgets.QWidget):
@@ -89,7 +89,7 @@ class ChatWidget(QtWidgets.QWidget):
     def addSizeButton(self, layout: QtWidgets.QHBoxLayout):
         self.sizeButton = QtWidgets.QPushButton()
         self.sizeButton.setFixedSize(32, 32)
-        self.sizeButton.setIcon(QtGui.QIcon("icons/chevron-up.png"))
+        self.sizeButton.setIcon(QtGui.QIcon(getPath("icons/chevron-up.png")))
         self.sizeButton.setIconSize(QtCore.QSize(24, 24))
         self.sizeButton.setStyleSheet(
             """
@@ -111,7 +111,7 @@ class ChatWidget(QtWidgets.QWidget):
     def addCloseButton(self, layout: QtWidgets.QHBoxLayout):
         self.closeButton = QtWidgets.QPushButton()
         self.closeButton.setFixedSize(32, 32)
-        self.closeButton.setIcon(QtGui.QIcon("icons/close.png"))
+        self.closeButton.setIcon(QtGui.QIcon(getPath("icons/close.png")))
         self.closeButton.setIconSize(QtCore.QSize(24, 24))
         self.closeButton.setStyleSheet(
             """
@@ -133,7 +133,7 @@ class ChatWidget(QtWidgets.QWidget):
     def addResetButton(self, layout: QtWidgets.QHBoxLayout):
         self.resetButton = QtWidgets.QPushButton()
         self.resetButton.setFixedSize(32, 32)
-        self.resetButton.setIcon(QtGui.QIcon("icons/reset.png"))
+        self.resetButton.setIcon(QtGui.QIcon(getPath("icons/reset.png")))
         self.resetButton.setIconSize(QtCore.QSize(24, 24))
         self.resetButton.setStyleSheet(
             """
@@ -160,11 +160,11 @@ class ChatWidget(QtWidgets.QWidget):
         startGeometry = self.geometry()
 
         if self.isExpanded:
-            self.sizeButton.setIcon(QtGui.QIcon("icons/chevron-up.png"))
+            self.sizeButton.setIcon(QtGui.QIcon(getPath("icons/chevron-up.png")))
             self.isExpanded = False
             endHeight = self.originalHeight
         else:
-            self.sizeButton.setIcon(QtGui.QIcon("icons/chevron-down.png"))
+            self.sizeButton.setIcon(QtGui.QIcon(getPath("icons/chevron-down.png")))
             self.isExpanded = True
             endHeight = 600
 
@@ -273,7 +273,7 @@ class ChatWidget(QtWidgets.QWidget):
 
         sendButton = QtWidgets.QPushButton()
         sendButton.setFixedSize(40, 24)
-        sendButton.setIcon(QtGui.QIcon("icons/send.png"))
+        sendButton.setIcon(QtGui.QIcon(getPath("icons/send.png")))
         sendButton.setIconSize(QtCore.QSize(24, 24))
         sendButton.clicked.connect(lambda: asyncio.create_task(self.sendChat()))
         sendButton.setStyleSheet(
