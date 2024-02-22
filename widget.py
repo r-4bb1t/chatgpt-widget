@@ -293,6 +293,7 @@ class ChatWidget(QtWidgets.QWidget):
     async def sendChat(self):
         userInput = self.chatInput.toPlainText().strip()
         self.chatInput.clear()
+        self.chatInput.setFixedHeight(40)
         if userInput:
             self.addChatBubble(userInput, True)
 
