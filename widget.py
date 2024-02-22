@@ -257,6 +257,7 @@ class ChatWidget(QtWidgets.QWidget):
 
         self.chatInput.keyPressEvent = keyPressEvent
         self.chatInput.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.chatInput.setAcceptRichText(False)
         self.chatInput.setFixedHeight(40)
         self.chatInput.setSizePolicy(
             QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum
@@ -335,5 +336,5 @@ class ChatWidget(QtWidgets.QWidget):
     def scrollChatLogBottom(self):
         self.chatLog.scrollToBottom()
 
-    def closeEvent(self, event):
+    def closeEvent():
         asyncio.get_event_loop().stop()
