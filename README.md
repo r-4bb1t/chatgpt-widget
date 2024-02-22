@@ -17,3 +17,4 @@ Download the .exe file and api-key.txt file in the /dist folder, put them in the
 # TODO
 
 - Run in background mode
+- Height increases even if the line goes beyond without pressing the enter key
